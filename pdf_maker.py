@@ -42,7 +42,7 @@ class PdfReport:
         pdf.set_font(family='Arial', size = 18, style='B')
         pdf.cell(w=150, h=40, txt='Price', border=1)
         pdf.set_font(family='Arial', size = 18)
-        pdf.cell(w=0, h=40, txt=price, border=1, ln=20)
+        pdf.cell(w=0, h=40, txt=str(price), border=1, ln=20)
 
         print('New PDF file', self.filename, 'was succesfully generated :)')
         pdf.output(self.filename)
