@@ -41,12 +41,13 @@ class Card_in_db:
         conn.close()
 
         if balance == None:
-            print('Sorry, there was a problem with your operation. Try again.')
+            print('Sorry, there was a problem with your operation. Maybe your crenditals are incorrect.')
             return False
 
-        if balance > self.amount:
+        if balance >= self.amount:
             return True
         else:
+            print('Not enough balance to perform the operation.')
             return False
 
 
@@ -59,6 +60,8 @@ class Card_in_db:
 
         check = self.check_money()
 
+        # Abrupt the operation if credentials are wrong 
+        # or there isn't enough money on the balance
         if not check:
             return False
         
