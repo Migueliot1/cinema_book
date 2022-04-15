@@ -1,6 +1,7 @@
 from functs import CinemaUser
 from functs_seat import Seat_in_db
 from functs_card import Card_in_db
+from pdf_maker import PdfReport
 
 # An introduction
 print('Hey! Welcome to the Cinema ticket booking app!')
@@ -35,9 +36,10 @@ while inp == 'start':
             quit()
 
     # Try to reserve the seat if there's enough money for purchase
-    card_db = Card_in_db(user.card, seat_db.get_seat_price())
+    ticket_price = seat_db.get_seat_price()
+    card_db = Card_in_db(user.card, ticket_price)
     
-    print('The seat', user.seat, 'costs', card_db.amount, '. You ok with this?')
+    print('The seat', user.seat, 'costs', ticket_price, '. You ok with this?')
     confirm = input('Type \'y\' if yes or anything else if no: ')
 
     if confirm != 'y':
@@ -45,13 +47,19 @@ while inp == 'start':
         continue
 
     reserve_try = card_db.withdraw()
+    seat_id = None
 
     if reserve_try:
-        seat_db.reserve_seat()
+        seat_id = seat_db.reserve_seat()
         print('\nYour seat has been successfully reserved.')
         # print('Generating PDF ticket...')
     else:
         print('\nSeems like there was a problem in reserving. Try again.')
+        inp = input('If you want to continue, type \'start\': ')
         continue
+    
+    if seat_id != None:
+        pdf = PdfReport('ticket.pdf')
+        pdf.generate(name=user.name, seat_num=user.seat, seat_id=seat_id, price=ticket_price)
 
     inp = input('If you want to book another ticket, type \'start\': ')
